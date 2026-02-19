@@ -1,7 +1,6 @@
 from apps.users.models import UserProfile
 import requests
 from django.conf import settings
-import math
 
 
 GITHUB_API = "https://api.github.com"
@@ -19,10 +18,7 @@ def estimate_pr_difficulty(pr_url):
     if r.status_code != 200:
         return 1.0
     pr = r.json()
-    additions = pr.get("additions", 0)
-    deletions = pr.get("deletions", 0)
-    changed_files = pr.get("changed_files", 0)
-    size = additions + deletions
+    size = pr.get("additions", 0) + pr.get("deletions", 0)
 
     if size < 50:
         return 1.0
@@ -34,14 +30,15 @@ def estimate_pr_difficulty(pr_url):
 
 
 def compute_growth_factor(pr_difficulty, current_skill):
-    # Larger gain when PR is harder than current skill
     delta = pr_difficulty - current_skill
     if delta <= 0:
-        return 0.05   # small gain for easy PRs
+        return 0.05
     return round(min(delta * 0.1, 0.5), 3)
 
 
 def update_skill_from_pr(username, pr_url):
+    from .models import UserProgress
+
     try:
         profile = UserProfile.objects.get(github_username=username)
     except UserProfile.DoesNotExist:
@@ -55,6 +52,16 @@ def update_skill_from_pr(username, pr_url):
 
     profile.skill_level = new_skill
     profile.save()
+
+    # Record progression
+    UserProgress.objects.create(
+        github_username=username,
+        pr_url=pr_url,
+        pr_difficulty=pr_difficulty,
+        skill_before=old_skill,
+        skill_after=new_skill,
+        growth_factor=growth,
+    )
 
     return {
         "github_username": username,
