@@ -1,0 +1,1 @@
+MODELS = {'default': 'tiny-embedding'}

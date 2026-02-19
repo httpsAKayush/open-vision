@@ -1,0 +1,6 @@
+from rest_framework.routers import DefaultRouter
+from .views import IssueViewSet
+
+router = DefaultRouter()
+router.register('', IssueViewSet)
+urlpatterns = router.urls
