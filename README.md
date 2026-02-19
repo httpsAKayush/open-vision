@@ -146,4 +146,22 @@ config/urls.py              → Wire it in
 
 # LAYER5: module anchoring
 
+# LAYER6: growth engine
+
+
+# BACKEND API Surface 
+```
+POST /api/users/analyze/
+GET  /api/users/<username>/
+
+POST /api/repositories/analyze/
+GET  /api/repositories/<owner>/<repo>/
+
+POST /api/issues/analyze/
+GET  /api/issues/<owner>/<repo>/
+
+POST /api/matching/recommend/
+POST /api/matching/growth/
+```
+
 
