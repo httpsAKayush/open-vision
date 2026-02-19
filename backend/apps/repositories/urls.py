@@ -1,6 +1,7 @@
-from rest_framework.routers import DefaultRouter
-from .views import RepositoryViewSet
+from django.urls import path
+from .views import AnalyzeRepoView, RepoDetailView
 
-router = DefaultRouter()
-router.register('', RepositoryViewSet)
-urlpatterns = router.urls
+urlpatterns = [
+    path("analyze/", AnalyzeRepoView.as_view(), name="analyze-repo"),
+    path("<str:owner>/<str:repo>/", RepoDetailView.as_view(), name="repo-detail"),
+]
