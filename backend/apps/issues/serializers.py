@@ -5,4 +5,4 @@ from .models import Issue
 class IssueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Issue
-        fields = '__all__'
+        fields = "__all__"

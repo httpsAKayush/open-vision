@@ -1,6 +1,7 @@
-from rest_framework.routers import DefaultRouter
-from .views import IssueViewSet
+from django.urls import path
+from .views import AnalyzeIssuesView, IssueListView
 
-router = DefaultRouter()
-router.register('', IssueViewSet)
-urlpatterns = router.urls
+urlpatterns = [
+    path("analyze/", AnalyzeIssuesView.as_view(), name="analyze-issues"),
+    path("<str:owner>/<str:repo>/", IssueListView.as_view(), name="issue-list"),
+]
